@@ -1,11 +1,13 @@
-// wrTUTy7Dq6aRA6QS
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
 const session = require("express-session");
+const passport = require("passport");
+
 
 //This is require when database connection url is imported from .env file
 require('dotenv').config();
+require("./password")(passport);
 
 const mongoose = require("mongoose");
 const indexRoute = require("./index");
@@ -26,12 +28,19 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 //flash connection middleware
 app.use(flash());
 
 app.use((req,res,next)=>{
     res.locals.success_msg = req.flash("success_msg");
     res.locals.error_msg = req.flash("error_msg");
+    res.locals.error = req.flash("error");
+
     next();
 
 })
