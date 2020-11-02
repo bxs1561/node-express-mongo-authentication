@@ -1,6 +1,8 @@
 // wrTUTy7Dq6aRA6QS
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 //This is require when database connection url is imported from .env file
 require('dotenv').config();
@@ -16,6 +18,23 @@ const app = express();
 //ejs middleware
 app.use(expressLayouts);
 app.set("view engine","ejs");
+
+//expression session middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+}));
+
+//flash connection middleware
+app.use(flash());
+
+app.use((req,res,next)=>{
+    res.locals.success_msg = req.flash("success_msg");
+    res.locals.error_msg = req.flash("error_msg");
+    next();
+
+})
 
 //body parser
 app.use(express.urlencoded({extended: false}));

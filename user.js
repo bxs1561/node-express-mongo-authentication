@@ -75,7 +75,8 @@ router.post("/register",(req,res)=>{
                             newUser.password= hash;
                         newUser.save()
                             .then(user=>{
-                                res.redirect("/login")
+                                req.flash("success_msg", "You are register");
+                                res.redirect("/users/login")
                             })
                             .catch(error=>res.status(400).json("error: "+ error))
                     }))
